@@ -1,4 +1,5 @@
-const client = require('./client.js');
+const client = require('./client');
+const { createUser, fetchUsers, getUserById, loginUser, validateUser } = require('./users');
 
 const dropTables = async () => {
   try {
@@ -57,7 +58,50 @@ const syncAndSeed = async () => {
     console.log('CREATING TABLES');
     await createTables();
     console.log('TABLES CREATED');
+
+    console.log('CREATING USERS');
+    const user1 = await createUser({
+      email: 'user1@example.com',
+      username: 'user1',
+      password: 'testtest'
+    });
     
+
+    const bob = await createUser({
+      email: 'bob@example.com',
+      username: 'bob',
+      password: 'hunter2'
+    });
+
+    const charlie = await createUser({
+      email: 'charlie@example.com',
+      username: 'charlie',
+      password: 'charliePass456'
+    });
+
+    const dana = await createUser({
+      email: 'dana@example.com',
+      username: 'dana',
+      password: 'dana123'
+    });
+
+    const alice = await createUser({
+      email: 'alice@example.com',
+      username: 'alice',
+      password: 'superSecretPassword123'
+    });
+    console.log('USERS CREATED');
+
+    console.log('Logging in...');
+    await loginUser('user1', 'testtest');
+    console.log('Logged in!');
+    
+    console.log('FETCHING ALL USERS');
+    console.log(await fetchUsers());
+
+    console.log('FETCHING USER BY ID (alice)');
+    console.log(await getUserById(alice.id));
+   
     await client.end();
     console.log('DISCONNECTED FROM DB');
   } catch (error) {
