@@ -1,5 +1,6 @@
 const client = require('./client');
 const { createUser, fetchUsers, getUserById, loginUser, validateUser } = require('./users');
+const { createMovie, getAllMovies, getMovieById, deleteMovie } = require('./movies');
 
 const dropTables = async () => {
   try {
@@ -95,12 +96,45 @@ const syncAndSeed = async () => {
     console.log('Logging in...');
     await loginUser('user1', 'testtest');
     console.log('Logged in!');
+
+    console.log('CREATING MOVIES');
+    const inception = await createMovie({
+      title: 'Inception',
+      genre: 'Sci-Fi',
+      year: 2010,
+      poster_url: 'http://example.com/inception.jpg',
+      summary: 'A mind-bending thriller...',
+    });
+
+    const godfather = await createMovie({
+      title: 'The Godfather',
+      genre: 'Crime',
+      year: 1972,
+      poster_url: 'http://example.com/godfather.jpg',
+      summary: 'Classic mafia drama.',
+    });
+
+    const matrix = await createMovie({
+      title: 'The Matrix',
+      genre: 'Action',
+      year: 1999,
+      poster_url: 'http://example.com/matrix.jpg',
+      summary: 'Reality is not what it seems.'
+    });
+
+    console.log('MOVIES CREATED');
     
     console.log('FETCHING ALL USERS');
     console.log(await fetchUsers());
 
     console.log('FETCHING USER BY ID (alice)');
     console.log(await getUserById(alice.id));
+
+    console.log('FETCHING ALL MOVIES');
+    console.log(await getAllMovies());
+
+    console.log('FETCHING MOVIE BY ID (inception)');
+    console.log(await getMovieById(inception.id));
    
     await client.end();
     console.log('DISCONNECTED FROM DB');
