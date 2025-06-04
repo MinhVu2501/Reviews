@@ -17,11 +17,11 @@ const createUser = async ({ email, username, password }) => {
   }
 };
 
-const loginUser = async (username, password) => {
+const loginUser = async (login, password) => {
   try {
     const { rows } = await client.query(`
-      SELECT * FROM users WHERE username = $1;
-    `, [username]);
+      SELECT * FROM users WHERE username = $1 OR email = $1;
+    `, [login]);
 
     const user = rows[0];
     if (!user) throw new Error('Invalid credentials');
@@ -30,11 +30,19 @@ const loginUser = async (username, password) => {
     if (!isPasswordValid) throw new Error('Invalid credentials');
 
     const token = jwt.sign({ id: user.id }, process.env.SECRET, { expiresIn: '1w' });
-    return { token, user: { id: user.id, email: user.email, username: user.username } };
+    return {
+      token,
+      user: {
+        id: user.id,
+        email: user.email,
+        username: user.username
+      }
+    };
   } catch (err) {
     throw new Error('Login failed: ' + err.message);
   }
 };
+
 
 const validateUser = async (token) => {
   try {

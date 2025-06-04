@@ -18,7 +18,8 @@ const {
   createReview,
   getAllReviews,
   getReviewById,
-  deleteReview
+  updateReview,
+  deleteReview,
 } = require('./reviews');
 
 const dropTables = async () => {
@@ -85,7 +86,6 @@ const syncAndSeed = async () => {
       username: 'user1',
       password: 'testtest'
     });
-    
 
     const bob = await createUser({
       email: 'bob@example.com',
