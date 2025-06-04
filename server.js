@@ -34,6 +34,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
+// Connect to DB and start server
 client.connect()
   .then(() => {
     console.log('Connected to DB');
@@ -45,25 +46,22 @@ client.connect()
     console.error('Error connecting to DB:', err);
   });
 
+// --- Auth Routes ---
 
-
-  app.post('/api/auth/login', async (req, res) => {
-    try {
-      const { username, email, password } = req.body;
-  
-      if ((!username && !email) || !password) {
-        return res.status(400).json({ error: 'Missing login or password' });
-      }
-  
-      const login = username || email;
-  
-      const { token, user } = await loginUser(login, password);
-      res.json({ token, user });
-    } catch (err) {
-      res.status(401).json({ error: err.message });
+app.post('/api/auth/login', async (req, res) => {
+  try {
+    const { username, email, password } = req.body;
+    if ((!username && !email) || !password) {
+      return res.status(400).json({ error: 'Missing login or password' });
     }
-  });
-  
+
+    const login = username || email;
+    const { token, user } = await loginUser(login, password);
+    res.json({ token, user });
+  } catch (err) {
+    res.status(401).json({ error: err.message });
+  }
+});
 
 app.post('/api/auth/register', async (req, res) => {
   try {
@@ -71,14 +69,21 @@ app.post('/api/auth/register', async (req, res) => {
     if (!email || !username || !password) {
       return res.status(400).json({ error: 'Missing email, username, or password' });
     }
+
     const user = await createUser({ email, username, password });
-    const token = jwt.sign({ id: user.id }, process.env.SECRET, { expiresIn: '1w' });
+
+    if (!process.env.JWT_SECRET) {
+      throw new Error('JWT_SECRET is not defined in environment variables');
+    }
+
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1w' });
     res.json({ token, user });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
 });
 
+// --- User Routes ---
 
 app.get('/api/users', async (req, res) => {
   try {
@@ -108,6 +113,7 @@ app.delete('/api/users/:id', async (req, res) => {
   }
 });
 
+// --- Movie Routes ---
 
 app.post('/api/movies', async (req, res) => {
   try {
@@ -145,6 +151,8 @@ app.delete('/api/movies/:id', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+// --- Review Routes ---
 
 app.post('/api/reviews', async (req, res) => {
   try {
