@@ -1,6 +1,25 @@
 const client = require('./client');
-const { createUser, fetchUsers, getUserById, loginUser, validateUser } = require('./users');
-const { createMovie, getAllMovies, getMovieById, deleteMovie } = require('./movies');
+const { 
+  createUser, 
+  fetchUsers, 
+  getUserById, 
+  loginUser, 
+  validateUser 
+} = require('./users');
+
+const { 
+  createMovie, 
+  getAllMovies, 
+  getMovieById, 
+  deleteMovie 
+} = require('./movies');
+
+const {
+  createReview,
+  getAllReviews,
+  getReviewById,
+  deleteReview
+} = require('./reviews');
 
 const dropTables = async () => {
   try {
@@ -124,6 +143,41 @@ const syncAndSeed = async () => {
 
     console.log('MOVIES CREATED');
     
+    const review1 = await createReview({
+      userId: user1.id,
+      movieId: inception.id,
+      rating: 4,
+      comment: 'Really enjoyed this movie!'
+    });
+
+    const review2 = await createReview({
+      userId: bob.id,
+      movieId: godfather.id,
+      rating: 5,
+      comment: 'Masterpiece.'
+    });
+
+    const review3 = await createReview({
+      userId: charlie.id,
+      movieId: godfather.id,
+      rating: 3,
+      comment: 'Pretty good!'
+    });
+
+    const review4 = await createReview({
+      userId: dana.id,
+      movieId: matrix.id,
+      rating: 5,
+      comment: 'Mind-blowing action and concept.'
+    });
+
+    const review5 = await createReview({
+      userId: alice.id,
+      movieId: matrix.id,
+      rating: 4,
+      comment: 'Loved the visuals and story.'
+    });
+
     console.log('FETCHING ALL USERS');
     console.log(await fetchUsers());
 
@@ -135,6 +189,12 @@ const syncAndSeed = async () => {
 
     console.log('FETCHING MOVIE BY ID (inception)');
     console.log(await getMovieById(inception.id));
+
+    console.log('FETCHING ALL REVIEWS');
+    console.log(await getAllReviews());
+
+    console.log('FETCHING REVIEW BY ID (review1)');
+    console.log(await getReviewById(review1.id));
    
     await client.end();
     console.log('DISCONNECTED FROM DB');
