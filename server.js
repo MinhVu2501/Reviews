@@ -10,7 +10,7 @@ const {
   getUserById,
   loginUser,
   validateUser,
-  deleteUser,
+   deleteUser,
 } = require('./db/users');
 
 const {
@@ -29,24 +29,25 @@ const {
 } = require('./db/reviews');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+
 
 app.use(cors());
 app.use(express.json());
 
-// Connect to DB and start server
+app.use(express.static('dist'));
+
 client.connect()
   .then(() => {
     console.log('Connected to DB');
-    app.listen(PORT, () => {
-      console.log(`Server listening on port ${PORT}`);
+    app.listen(process.env.PORT, () => {
+      console.log(`Server listening on port ${process.env.PORT}`);
     });
   })
   .catch((err) => {
     console.error('Error connecting to DB:', err);
   });
 
-// --- Auth Routes ---
+
 
 app.post('/api/auth/login', async (req, res) => {
   try {
