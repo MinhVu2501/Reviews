@@ -29,7 +29,11 @@ const loginUser = async (login, password) => {
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) throw new Error('Invalid credentials');
 
-    const token = jwt.sign({ id: user.id }, process.env.SECRET, { expiresIn: '1w' });
+    if (!process.env.JWT_SECRET) {
+      throw new Error('JWT_SECRET is not defined in environment variables');
+    }
+
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1w' });
     return {
       token,
       user: {
@@ -43,10 +47,13 @@ const loginUser = async (login, password) => {
   }
 };
 
-
 const validateUser = async (token) => {
   try {
-    const decoded = jwt.verify(token, process.env.SECRET);
+    if (!process.env.JWT_SECRET) {
+      throw new Error('JWT_SECRET is not defined in environment variables');
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const { rows } = await client.query(`
       SELECT id, email, username FROM users WHERE id = $1;
     `, [decoded.id]);

@@ -39,7 +39,13 @@ const getAllReviews = async () => {
 const getReviewById = async (id) => {
   if (!id) throw new Error('Review ID is required');
   try {
-    const { rows } = await client.query(`SELECT * FROM reviews WHERE id = $1;`, [id]);
+    const { rows } = await client.query(`
+      SELECT reviews.*, users.username, movies.title
+      FROM reviews
+      JOIN users ON reviews.user_id = users.id
+      JOIN movies ON reviews.movie_id = movies.id
+      WHERE reviews.id = $1;
+    `, [id]);
     if (!rows[0]) throw new Error('Review not found');
     return rows[0];
   } catch (error) {

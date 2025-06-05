@@ -1,9 +1,16 @@
-const App = () => {
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import Home from "./components/Home";
+
+
+function App() {
 
   return (
-    <>
-      <h1>REVIEWS</h1>
-    </>
+    <div>
+    <Routes>
+        <Route path="/" element={<Home />} />
+      </Routes>
+    </div>
   )
 }
 
