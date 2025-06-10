@@ -10,7 +10,7 @@ const {
   getUserById,
   loginUser,
   validateUser,
-   deleteUser,
+  deleteUser,
 } = require('./db/users');
 
 const {
@@ -30,7 +30,6 @@ const {
 
 const app = express();
 
-
 app.use(cors());
 app.use(express.json());
 
@@ -39,25 +38,26 @@ app.use(express.static('dist'));
 client.connect()
   .then(() => {
     console.log('Connected to DB');
-    app.listen(process.env.PORT, () => {
-      console.log(`Server listening on port ${process.env.PORT}`);
+    app.listen(process.env.PORT || 3000, () => {
+      console.log(`Server listening on port ${process.env.PORT || 3000}`);
     });
   })
   .catch((err) => {
     console.error('Error connecting to DB:', err);
   });
 
-
-
+// Auth login route expects { identifier, password }
 app.post('/api/auth/login', async (req, res) => {
   try {
-    const { username, email, password } = req.body;
-    if ((!username && !email) || !password) {
+    const { identifier, password } = req.body;
+
+    if (!identifier || !password) {
       return res.status(400).json({ error: 'Missing login or password' });
     }
 
-    const login = username || email;
-    const { token, user } = await loginUser(login, password);
+    // Your loginUser function should handle either username or email in identifier
+    const { token, user } = await loginUser(identifier, password);
+
     res.json({ token, user });
   } catch (err) {
     res.status(401).json({ error: err.message });
@@ -84,7 +84,6 @@ app.post('/api/auth/register', async (req, res) => {
   }
 });
 
-// --- User Routes ---
 
 app.get('/api/users', async (req, res) => {
   try {
@@ -114,7 +113,7 @@ app.delete('/api/users/:id', async (req, res) => {
   }
 });
 
-// --- Movie Routes ---
+
 
 app.post('/api/movies', async (req, res) => {
   try {
@@ -153,7 +152,7 @@ app.delete('/api/movies/:id', async (req, res) => {
   }
 });
 
-// --- Review Routes ---
+
 
 app.post('/api/reviews', async (req, res) => {
   try {
