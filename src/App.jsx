@@ -14,9 +14,15 @@ function AppWrapper() {
     navigate("/");
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setUser(null);
+    navigate("/");
+  };
+
   return (
     <Routes>
-      <Route path="/" element={<Home user={user} />} />
+      <Route path="/" element={<Home user={user} onLogout={handleLogout} />} />
       <Route path="/login" element={<Login onLogin={handleLogin} />} />
       <Route path="/register" element={<Registration onRegister={handleLogin} />} />
     </Routes>
