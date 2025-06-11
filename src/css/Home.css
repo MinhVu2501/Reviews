@@ -31,7 +31,6 @@ body {
 .hero {
   text-align: center;
   padding: 60px 20px;
-  background-image: url('/images/banner.jpg'); /* Replace with your background */
   background-size: cover;
   background-position: center;
   color: white;
