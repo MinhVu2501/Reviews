@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../css/Home.css";
 
-const Home = ({ user }) => {
+const Home = ({ user, onLogout }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
@@ -32,16 +32,24 @@ const Home = ({ user }) => {
               </Link>
             </>
           ) : (
-            <span className="welcome-text">Welcome, {user.username}!</span>
+            <>
+              <span className="welcome-text">Welcome, {user.username}!</span>
+              <button
+                onClick={onLogout}
+                className="logout-button"
+                aria-label="Logout"
+                style={{ marginLeft: "1rem" }}
+              >
+                Logout
+              </button>
+            </>
           )}
         </nav>
       </header>
 
       <section className="hero" aria-label="Site introduction">
         <h1>Discover & Review Your Favorite Movies</h1>
-        <p>
-          From blockbusters to indie gems, find honest reviews and ratings.
-        </p>
+        <p>From blockbusters to indie gems, find honest reviews and ratings.</p>
         <div className="search-bar">
           <input
             type="text"
@@ -61,7 +69,7 @@ const Home = ({ user }) => {
         <div className="review-cards">
           <article className="card">
             <img
-              
+              src="/images/inception.jpg"
               alt="Poster of the movie Inception"
               loading="lazy"
             />
@@ -71,7 +79,7 @@ const Home = ({ user }) => {
 
           <article className="card">
             <img
-              
+              src="/images/matrix.jpg"
               alt="Poster of the movie The Matrix"
               loading="lazy"
             />
@@ -81,7 +89,7 @@ const Home = ({ user }) => {
 
           <article className="card">
             <img
-              
+              src="/images/godfather.jpg"
               alt="Poster of the movie The Godfather"
               loading="lazy"
             />
