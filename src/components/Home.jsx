@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import '../css/Home.css';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import "../css/Home.css";
 
-const Home = () => {
-  const [searchTerm, setSearchTerm] = useState('');
+const Home = ({ user }) => {
+  const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
   const handleSearch = () => {
@@ -16,26 +16,38 @@ const Home = () => {
     <div className="home-container">
       <header className="navbar">
         <div className="logo">MovieVerse</div>
-        <nav className="nav-links">
+        <nav className="nav-links" aria-label="Primary navigation">
           <Link to="/">Home</Link>
           <Link to="/reviews">Reviews</Link>
           <Link to="/top-rated">Top Rated</Link>
           <Link to="/about">About</Link>
           <Link to="/contact">Contact</Link>
-          <Link to="/login" className="auth-link">Login</Link>
-          <Link to="/register" className="auth-link">Register</Link>
+          {!user ? (
+            <>
+              <Link to="/login" className="auth-link">
+                Login
+              </Link>
+              <Link to="/register" className="auth-link">
+                Register
+              </Link>
+            </>
+          ) : (
+            <span className="welcome-text">Welcome, {user.username}!</span>
+          )}
         </nav>
       </header>
 
-      <section className="hero">
+      <section className="hero" aria-label="Site introduction">
         <h1>Discover & Review Your Favorite Movies</h1>
-        <p>From blockbusters to indie gems, find honest reviews and ratings.</p>
+        <p>
+          From blockbusters to indie gems, find honest reviews and ratings.
+        </p>
         <div className="search-bar">
           <input
             type="text"
             placeholder="Search for a movie..."
             value={searchTerm}
-            onChange={e => setSearchTerm(e.target.value)}
+            onChange={(e) => setSearchTerm(e.target.value)}
             aria-label="Search movies"
           />
           <button onClick={handleSearch} aria-label="Search">
@@ -44,24 +56,38 @@ const Home = () => {
         </div>
       </section>
 
-      <section className="featured-reviews">
+      <section className="featured-reviews" aria-label="Featured movie reviews">
         <h2>Featured Reviews</h2>
         <div className="review-cards">
-          <div className="card">
-            <img />
+          <article className="card">
+            <img
+              
+              alt="Poster of the movie Inception"
+              loading="lazy"
+            />
             <h3>Inception</h3>
             <p>A mind-bending thriller from Christopher Nolan that keeps you on edge.</p>
-          </div>
-          <div className="card">
-            <img />
+          </article>
+
+          <article className="card">
+            <img
+              
+              alt="Poster of the movie The Matrix"
+              loading="lazy"
+            />
             <h3>The Matrix</h3>
             <p>A brilliant social commentary wrapped in an unpredictable thriller.</p>
-          </div>
-          <div className="card">
-            <img />
-            <h3>The God Father</h3>
-            <p>Heath Ledger’s iconic Joker performance steals the show.</p>
-          </div>
+          </article>
+
+          <article className="card">
+            <img
+              
+              alt="Poster of the movie The Godfather"
+              loading="lazy"
+            />
+            <h3>The Godfather</h3>
+            <p>An epic tale of crime, family, and power in the mafia world.</p>
+          </article>
         </div>
       </section>
     </div>

@@ -25,7 +25,7 @@ export default function Login({ onLogin }) {
 
       onLogin(data.token, data.user);
 
-    
+      // Clear inputs after successful login
       setIdentifier("");
       setPassword("");
     } catch (err) {
@@ -36,27 +36,29 @@ export default function Login({ onLogin }) {
   return (
     <form onSubmit={handleSubmit}>
       <h2>Login</h2>
-      <label>
-        Username or Email:
-        <input
-          type="text"
-          value={identifier}
-          onChange={(e) => setIdentifier(e.target.value)}
-          required
-        />
-      </label>
+
+      <label htmlFor="identifier">Username or Email:</label>
+      <input
+        id="identifier"
+        type="text"
+        value={identifier}
+        onChange={(e) => setIdentifier(e.target.value)}
+        required
+      />
       <br />
-      <label>
-        Password:
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-      </label>
+
+      <label htmlFor="password">Password:</label>
+      <input
+        id="password"
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        required
+      />
       <br />
+
       {error && <p style={{ color: "red" }}>{error}</p>}
+
       <button type="submit">Login</button>
     </form>
   );

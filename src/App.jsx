@@ -2,27 +2,27 @@ import React, { useState } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import Home from "./components/Home";
 import Login from "./components/Login";
+import Registration from "./components/Registration";
 
-function App() {
-  const [user, setUser] = useState(null);
+function AppWrapper() {
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
 
-  
   const handleLogin = (token, userData) => {
-    setUser(userData);
     localStorage.setItem("token", token);
-    
+    setUser(userData);
     navigate("/");
   };
 
   return (
-    <div>
-      <Routes>
-        <Route path="/" element={<Home user={user} />} />
-        <Route path="/login" element={<Login onLogin={handleLogin} />} />
-      </Routes>
-    </div>
+    <Routes>
+      <Route path="/" element={<Home user={user} />} />
+      <Route path="/login" element={<Login onLogin={handleLogin} />} />
+      <Route path="/register" element={<Registration onRegister={handleLogin} />} />
+    </Routes>
   );
 }
 
-export default App;
+export default function App() {
+  return <AppWrapper />;
+}
