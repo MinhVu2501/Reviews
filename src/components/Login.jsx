@@ -10,7 +10,7 @@ export default function Login({ onLogin }) {
     setError(null);
 
     try {
-      const res = await fetch("/api/auth/login", {
+      const res = await fetch("https://movies-reviews-ly21.onrender.com/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ identifier, password }),
@@ -25,7 +25,6 @@ export default function Login({ onLogin }) {
 
       onLogin(data.token, data.user);
 
-      // Clear inputs after successful login
       setIdentifier("");
       setPassword("");
     } catch (err) {

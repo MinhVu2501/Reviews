@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 
 export default function Registration({ onRegister }) {
   const [email, setEmail] = useState("");
@@ -13,7 +13,7 @@ export default function Registration({ onRegister }) {
     setError(null);
 
     try {
-      const res = await fetch("/api/auth/register", {
+      const res = await fetch("https://movies-reviews-ly21.onrender.com/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, username, password }),
@@ -26,7 +26,9 @@ export default function Registration({ onRegister }) {
         return;
       }
 
-      onRegister(data.token, data.user); // Pass to App.jsx
+      onRegister(data.token, data.user);
+      // Optionally navigate on success:
+      // navigate("/");
     } catch (err) {
       setError("Network error");
     }
