@@ -24,11 +24,12 @@ const {
 
 const dropTables = async () => {
   try {
-    await client.query(`
-      DROP TABLE IF EXISTS reviews;
-      DROP TABLE IF EXISTS movies;
-      DROP TABLE IF EXISTS users;
-    `);
+    console.log("Dropping tables...");
+    // Drop in reverse dependency order
+    await client.query(`DROP TABLE IF EXISTS reviews;`);
+    await client.query(`DROP TABLE IF EXISTS movies;`);
+    await client.query(`DROP TABLE IF EXISTS users;`);
+    console.log("Tables dropped.");
   } catch (err) {
     console.error('Error dropping tables:', err);
   }
@@ -36,6 +37,8 @@ const dropTables = async () => {
 
 const createTables = async () => {
   try {
+    console.log("Creating tables...");
+
     await client.query(`
       CREATE TABLE users (
         id SERIAL PRIMARY KEY,
@@ -43,7 +46,9 @@ const createTables = async () => {
         username VARCHAR(30) UNIQUE NOT NULL,
         password VARCHAR(60) NOT NULL
       );
+    `);
 
+    await client.query(`
       CREATE TABLE movies (
         id SERIAL PRIMARY KEY,
         title VARCHAR(255) NOT NULL,
@@ -52,7 +57,9 @@ const createTables = async () => {
         poster_url TEXT,
         summary TEXT
       );
+    `);
 
+    await client.query(`
       CREATE TABLE reviews (
         id SERIAL PRIMARY KEY,
         user_id INT REFERENCES users(id) ON DELETE CASCADE,
@@ -62,6 +69,8 @@ const createTables = async () => {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);
+
+    console.log("Tables created.");
   } catch (err) {
     console.error('Error creating tables:', err);
   }
@@ -70,17 +79,12 @@ const createTables = async () => {
 const syncAndSeed = async () => {
   try {
     await client.connect();
-    console.log('CONNECTED TO DB');
+    console.log('Connected to DB');
 
-    console.log('DROPPING TABLES');
     await dropTables();
-    console.log('TABLES DROPPED');
-
-    console.log('CREATING TABLES');
     await createTables();
-    console.log('TABLES CREATED');
 
-    console.log('CREATING USERS');
+    console.log('Creating users...');
     const user1 = await createUser({
       email: 'user1@example.com',
       username: 'user1',
@@ -110,13 +114,13 @@ const syncAndSeed = async () => {
       username: 'alice',
       password: 'superSecretPassword123'
     });
-    console.log('USERS CREATED');
+    console.log('Users created.');
 
-    console.log('Logging in...');
+    console.log('Logging in user1...');
     await loginUser('user1', 'testtest');
-    console.log('Logged in!');
+    console.log('Logged in successfully.');
 
-    console.log('CREATING MOVIES');
+    console.log('Creating movies...');
     const inception = await createMovie({
       title: 'Inception',
       genre: 'Sci-Fi',
@@ -141,63 +145,69 @@ const syncAndSeed = async () => {
       summary: 'Reality is not what it seems.'
     });
 
-    console.log('MOVIES CREATED');
-    
-    const review1 = await createReview({
+    console.log('Movies created.');
+
+    console.log('Creating reviews...');
+    await createReview({
       userId: user1.id,
       movieId: inception.id,
       rating: 4,
       comment: 'Really enjoyed this movie!'
     });
 
-    const review2 = await createReview({
+    await createReview({
       userId: bob.id,
       movieId: godfather.id,
       rating: 5,
       comment: 'Masterpiece.'
     });
 
-    const review3 = await createReview({
+    await createReview({
       userId: charlie.id,
       movieId: godfather.id,
       rating: 3,
       comment: 'Pretty good!'
     });
 
-    const review4 = await createReview({
+    await createReview({
       userId: dana.id,
       movieId: matrix.id,
       rating: 5,
       comment: 'Mind-blowing action and concept.'
     });
 
-    const review5 = await createReview({
+    await createReview({
       userId: alice.id,
       movieId: matrix.id,
       rating: 4,
       comment: 'Loved the visuals and story.'
     });
 
-    console.log('FETCHING ALL USERS');
+    console.log('Reviews created.');
+
+    console.log('Fetching all users...');
     console.log(await fetchUsers());
 
-    console.log('FETCHING USER BY ID (alice)');
+    console.log('Fetching user by ID (alice)...');
     console.log(await getUserById(alice.id));
 
-    console.log('FETCHING ALL MOVIES');
+    console.log('Fetching all movies...');
     console.log(await getAllMovies());
 
-    console.log('FETCHING MOVIE BY ID (inception)');
+    console.log('Fetching movie by ID (inception)...');
     console.log(await getMovieById(inception.id));
 
-    console.log('FETCHING ALL REVIEWS');
+    console.log('Fetching all reviews...');
     console.log(await getAllReviews());
 
-    console.log('FETCHING REVIEW BY ID (review1)');
-    console.log(await getReviewById(review1.id));
-   
+    console.log('Fetching review by ID (first review)...');
+    const allReviews = await getAllReviews();
+    if (allReviews.length > 0) {
+      console.log(await getReviewById(allReviews[0].id));
+    }
+
     await client.end();
-    console.log('DISCONNECTED FROM DB');
+    console.log('Disconnected from DB');
   } catch (error) {
     console.error('Error in syncAndSeed:', error);
     await client.end();

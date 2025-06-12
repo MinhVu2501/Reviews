@@ -1,8 +1,8 @@
 const client = require('./client');
 
 const createReview = async ({ userId, movieId, rating, comment = '' }) => {
-  if (!userId || !rating || !movieId) {
-    throw new Error('userId, rating, and movieId are required');
+  if (!userId || !movieId || !rating) {
+    throw new Error('userId, movieId, and rating are required');
   }
 
   if (typeof rating !== 'number' || rating < 1 || rating > 5) {
@@ -10,12 +10,14 @@ const createReview = async ({ userId, movieId, rating, comment = '' }) => {
   }
 
   try {
-    const { rows } = await client.query(`
+    const { rows } = await client.query(
+      `
       INSERT INTO reviews (user_id, movie_id, rating, comment)
       VALUES ($1, $2, $3, $4)
       RETURNING *;
-    `, [userId, movieId, rating, comment]);
-
+    `,
+      [userId, movieId, rating, comment]
+    );
     return rows[0];
   } catch (error) {
     throw new Error('Error creating review: ' + error.message);
@@ -25,12 +27,31 @@ const createReview = async ({ userId, movieId, rating, comment = '' }) => {
 const getAllReviews = async () => {
   try {
     const { rows } = await client.query(`
-      SELECT reviews.*, users.username, movies.title
+      SELECT 
+        reviews.id, 
+        reviews.user_id, 
+        reviews.movie_id, 
+        reviews.rating, 
+        reviews.comment, 
+        reviews.created_at,
+        users.username, 
+        movies.title AS movie_title
       FROM reviews
       JOIN users ON reviews.user_id = users.id
-      JOIN movies ON reviews.movie_id = movies.id;
+      JOIN movies ON reviews.movie_id = movies.id
+      ORDER BY reviews.created_at DESC;
     `);
-    return rows;
+
+    return rows.map((row) => ({
+      id: row.id,
+      userId: row.user_id,
+      movieId: row.movie_id,
+      rating: row.rating,
+      comment: row.comment,
+      createdAt: row.created_at,
+      username: row.username,
+      movieTitle: row.movie_title,
+    }));
   } catch (error) {
     throw new Error('Error fetching reviews: ' + error.message);
   }
@@ -39,15 +60,38 @@ const getAllReviews = async () => {
 const getReviewById = async (id) => {
   if (!id) throw new Error('Review ID is required');
   try {
-    const { rows } = await client.query(`
-      SELECT reviews.*, users.username, movies.title
+    const { rows } = await client.query(
+      `
+      SELECT 
+        reviews.id, 
+        reviews.user_id, 
+        reviews.movie_id, 
+        reviews.rating, 
+        reviews.comment, 
+        reviews.created_at,
+        users.username, 
+        movies.title AS movie_title
       FROM reviews
       JOIN users ON reviews.user_id = users.id
       JOIN movies ON reviews.movie_id = movies.id
       WHERE reviews.id = $1;
-    `, [id]);
+    `,
+      [id]
+    );
+
     if (!rows[0]) throw new Error('Review not found');
-    return rows[0];
+
+    const row = rows[0];
+    return {
+      id: row.id,
+      userId: row.user_id,
+      movieId: row.movie_id,
+      rating: row.rating,
+      comment: row.comment,
+      createdAt: row.created_at,
+      username: row.username,
+      movieTitle: row.movie_title,
+    };
   } catch (error) {
     throw new Error('Error fetching review by ID: ' + error.message);
   }
@@ -80,11 +124,15 @@ const updateReview = async ({ id, rating, comment }) => {
   values.push(id);
 
   try {
-    const { rows } = await client.query(`
-      UPDATE reviews SET ${fields.join(', ')}
+    const { rows } = await client.query(
+      `
+      UPDATE reviews
+      SET ${fields.join(', ')}
       WHERE id = $${idx}
       RETURNING *;
-    `, values);
+    `,
+      values
+    );
 
     if (!rows[0]) throw new Error('Review not found');
     return rows[0];
@@ -96,10 +144,15 @@ const updateReview = async ({ id, rating, comment }) => {
 const deleteReview = async (id) => {
   if (!id) throw new Error('Review ID is required');
   try {
-    const { rows } = await client.query(`
-      DELETE FROM reviews WHERE id = $1
+    const { rows } = await client.query(
+      `
+      DELETE FROM reviews
+      WHERE id = $1
       RETURNING *;
-    `, [id]);
+    `,
+      [id]
+    );
+
     if (!rows[0]) throw new Error('Review not found');
     return rows[0];
   } catch (error) {
