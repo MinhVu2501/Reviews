@@ -269,7 +269,7 @@ export default function Reviews({ user }) {
           {reviews.map((r) => (
             <li key={r.id}>
               <strong>{r.username}</strong> rated{" "}
-              <em>{r.title || "Unknown Movie"}</em> {r.rating}/5
+              <em>{r.movieTitle || "Unknown Movie"}</em> {r.rating}/5
               <br />
               {r.comment && <span>Review: {r.comment}</span>}
             </li>
