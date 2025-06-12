@@ -1,34 +1,43 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export default function Login({ onLogin }) {
-  const [identifier, setIdentifier] = useState("");
-  const [password, setPassword] = useState("");
+  const [identifier, setIdentifier] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleSubmit = async (e) => {
+  // Where to redirect after login (default to homepage or use from state)
+  const from = location.state?.from || '/';
+
+  const handleSubmit = async e => {
     e.preventDefault();
     setError(null);
 
     try {
-      const res = await fetch("https://movies-reviews-ly21.onrender.com/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch('https://movies-reviews-ly21.onrender.com/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ identifier, password }),
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || "Login failed");
+        setError(data.error || 'Login failed');
         return;
       }
 
       onLogin(data.token, data.user);
 
-      setIdentifier("");
-      setPassword("");
+      setIdentifier('');
+      setPassword('');
+
+      // Redirect back to the page user came from
+      navigate(from, { replace: true });
     } catch (err) {
-      setError("Network error");
+      setError('Network error');
     }
   };
 
@@ -41,7 +50,7 @@ export default function Login({ onLogin }) {
         id="identifier"
         type="text"
         value={identifier}
-        onChange={(e) => setIdentifier(e.target.value)}
+        onChange={e => setIdentifier(e.target.value)}
         required
       />
       <br />
@@ -51,12 +60,12 @@ export default function Login({ onLogin }) {
         id="password"
         type="password"
         value={password}
-        onChange={(e) => setPassword(e.target.value)}
+        onChange={e => setPassword(e.target.value)}
         required
       />
       <br />
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
 
       <button type="submit">Login</button>
     </form>

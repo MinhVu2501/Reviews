@@ -5,59 +5,41 @@ const jwt = require('jsonwebtoken');
 const client = require('./db/client');
 
 const {
-  createUser,
-  fetchUsers,
-  getUserById,
-  loginUser,
-  validateUser,
-  deleteUser,
+  createUser, fetchUsers, getUserById, loginUser, validateUser, deleteUser,
 } = require('./db/users');
 
 const {
-  createMovie,
-  getAllMovies,
-  getMovieById,
-  deleteMovie,
+  createMovie, getAllMovies, getMovieById, deleteMovie,
 } = require('./db/movies');
 
 const {
-  createReview,
-  getAllReviews,
-  getReviewById,
-  updateReview,
-  deleteReview,
+  createReview, getAllReviews, getReviewById, updateReview, deleteReview,
 } = require('./db/reviews');
 
 const app = express();
-
 app.use(cors());
 app.use(express.json());
-
 app.use(express.static('dist'));
 
 client.connect()
   .then(() => {
-    console.log('Connected to DB');
+    console.log('✅ Connected to DB');
     app.listen(process.env.PORT || 3000, () => {
-      console.log(`Server listening on port ${process.env.PORT || 3000}`);
+      console.log(`🚀 Server listening on port ${process.env.PORT || 3000}`);
     });
   })
   .catch((err) => {
-    console.error('Error connecting to DB:', err);
+    console.error('❌ Error connecting to DB:', err);
   });
 
-// Auth login route expects { identifier, password }
+/* AUTH ROUTES */
 app.post('/api/auth/login', async (req, res) => {
   try {
     const { identifier, password } = req.body;
-
     if (!identifier || !password) {
       return res.status(400).json({ error: 'Missing login or password' });
     }
-
-    // Your loginUser function should handle either username or email in identifier
     const { token, user } = await loginUser(identifier, password);
-
     res.json({ token, user });
   } catch (err) {
     res.status(401).json({ error: err.message });
@@ -70,11 +52,10 @@ app.post('/api/auth/register', async (req, res) => {
     if (!email || !username || !password) {
       return res.status(400).json({ error: 'Missing email, username, or password' });
     }
-
     const user = await createUser({ email, username, password });
 
     if (!process.env.JWT_SECRET) {
-      throw new Error('JWT_SECRET is not defined in environment variables');
+      throw new Error('JWT_SECRET is not defined');
     }
 
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1w' });
@@ -84,7 +65,7 @@ app.post('/api/auth/register', async (req, res) => {
   }
 });
 
-
+/* USER ROUTES */
 app.get('/api/users', async (req, res) => {
   try {
     const users = await fetchUsers();
@@ -113,8 +94,7 @@ app.delete('/api/users/:id', async (req, res) => {
   }
 });
 
-
-
+/* MOVIE ROUTES */
 app.post('/api/movies', async (req, res) => {
   try {
     const movie = await createMovie(req.body);
@@ -152,8 +132,7 @@ app.delete('/api/movies/:id', async (req, res) => {
   }
 });
 
-
-
+/* REVIEW ROUTES */
 app.post('/api/reviews', async (req, res) => {
   try {
     const review = await createReview(req.body);
@@ -168,6 +147,7 @@ app.get('/api/reviews', async (req, res) => {
     const reviews = await getAllReviews();
     res.json(reviews);
   } catch (err) {
+    console.error('❌ Error fetching reviews:', err);
     res.status(500).json({ error: err.message });
   }
 });

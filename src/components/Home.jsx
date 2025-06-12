@@ -12,6 +12,11 @@ const Home = ({ user, onLogout }) => {
     }
   };
 
+  const handleLogout = () => {
+    onLogout();
+    navigate("/");
+  };
+
   return (
     <div className="home-container">
       <header className="navbar">
@@ -35,7 +40,7 @@ const Home = ({ user, onLogout }) => {
             <>
               <span className="welcome-text">Welcome, {user.username}!</span>
               <button
-                onClick={onLogout}
+                onClick={handleLogout}
                 className="logout-button"
                 aria-label="Logout"
                 style={{ marginLeft: "1rem" }}
@@ -69,7 +74,7 @@ const Home = ({ user, onLogout }) => {
         <div className="review-cards">
           <article className="card">
             <img
-              src="/images/inception.jpg"
+              //src="/images/inception.jpg"
               alt="Poster of the movie Inception"
               loading="lazy"
             />
@@ -79,7 +84,7 @@ const Home = ({ user, onLogout }) => {
 
           <article className="card">
             <img
-              src="/images/matrix.jpg"
+              //src="/images/matrix.jpg"
               alt="Poster of the movie The Matrix"
               loading="lazy"
             />
@@ -89,7 +94,7 @@ const Home = ({ user, onLogout }) => {
 
           <article className="card">
             <img
-              src="/images/godfather.jpg"
+              //src="/images/godfather.jpg"
               alt="Poster of the movie The Godfather"
               loading="lazy"
             />
