@@ -7,6 +7,8 @@ import Reviews from "./components/Reviews";
 import TopRated from "./components/TopRated";
 import SearchResults from "./components/SearchResults";
 import MovieDetail from "./components/MoviesDetail";
+import About from "./components/About";
+
 
 function AppWrapper() {
   const navigate = useNavigate();
@@ -44,6 +46,7 @@ function AppWrapper() {
       <Route path="/top-rated" element={<TopRated />} />
       <Route path="/search" element={<SearchResults />} />
       <Route path="/movies/:id" element={<MovieDetail />} />
+      <Route path="/about" element={<About />} /> 
     </Routes>
   );
 }
