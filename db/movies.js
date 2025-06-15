@@ -1,20 +1,21 @@
 const client = require('./client');
 
 // Create a new movie
-const createMovie = async ({ title, director, releaseYear }) => {
+const createMovie = async ({ title, genre, year, poster_url, summary, director }) => {
   if (!title) {
     throw new Error('Title is required');
   }
 
   try {
     const { rows } = await client.query(`
-      INSERT INTO movies (title, director, release_year)
-      VALUES ($1, $2, $3)
+      INSERT INTO movies (title, genre, year, poster_url, summary, director)
+      VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING *;
-    `, [title, director || null, releaseYear || null]);
+    `, [title, genre || null, year || null, poster_url || null, summary || null, director || null]);
 
     return rows[0];
   } catch (error) {
+    console.error('Error creating movie:', error);
     throw new Error('Error creating movie: ' + error.message);
   }
 };
@@ -23,12 +24,13 @@ const createMovie = async ({ title, director, releaseYear }) => {
 const getAllMovies = async () => {
   try {
     const { rows } = await client.query(`
-      SELECT id, title, director, release_year
+      SELECT id, title, genre, year, poster_url, summary, director
       FROM movies
       ORDER BY title ASC;
     `);
     return rows;
   } catch (error) {
+    console.error('Error fetching movies:', error);
     throw new Error('Error fetching movies: ' + error.message);
   }
 };
@@ -36,9 +38,10 @@ const getAllMovies = async () => {
 // Get a single movie by ID
 const getMovieById = async (id) => {
   if (!id) throw new Error('Movie ID is required');
+
   try {
     const { rows } = await client.query(`
-      SELECT id, title, director, release_year
+      SELECT id, title, genre, year, poster_url, summary, director
       FROM movies
       WHERE id = $1;
     `, [id]);
@@ -46,13 +49,15 @@ const getMovieById = async (id) => {
     if (!rows[0]) throw new Error('Movie not found');
     return rows[0];
   } catch (error) {
+    console.error('Error fetching movie by ID:', error);
     throw new Error('Error fetching movie by ID: ' + error.message);
   }
 };
 
 // Update movie
-const updateMovie = async ({ id, title, director, releaseYear }) => {
+const updateMovie = async ({ id, title, genre, year, poster_url, summary, director }) => {
   if (!id) throw new Error('Movie ID is required');
+
   const fields = [];
   const values = [];
   let idx = 1;
@@ -61,13 +66,25 @@ const updateMovie = async ({ id, title, director, releaseYear }) => {
     fields.push(`title = $${idx++}`);
     values.push(title);
   }
+  if (genre !== undefined) {
+    fields.push(`genre = $${idx++}`);
+    values.push(genre);
+  }
+  if (year !== undefined) {
+    fields.push(`year = $${idx++}`);
+    values.push(year);
+  }
+  if (poster_url !== undefined) {
+    fields.push(`poster_url = $${idx++}`);
+    values.push(poster_url);
+  }
+  if (summary !== undefined) {
+    fields.push(`summary = $${idx++}`);
+    values.push(summary);
+  }
   if (director !== undefined) {
     fields.push(`director = $${idx++}`);
     values.push(director);
-  }
-  if (releaseYear !== undefined) {
-    fields.push(`release_year = $${idx++}`);
-    values.push(releaseYear);
   }
 
   if (fields.length === 0) throw new Error('No fields to update');
@@ -85,6 +102,7 @@ const updateMovie = async ({ id, title, director, releaseYear }) => {
     if (!rows[0]) throw new Error('Movie not found');
     return rows[0];
   } catch (error) {
+    console.error('Error updating movie:', error);
     throw new Error('Error updating movie: ' + error.message);
   }
 };
@@ -92,6 +110,7 @@ const updateMovie = async ({ id, title, director, releaseYear }) => {
 // Delete movie
 const deleteMovie = async (id) => {
   if (!id) throw new Error('Movie ID is required');
+
   try {
     const { rows } = await client.query(`
       DELETE FROM movies
@@ -102,6 +121,7 @@ const deleteMovie = async (id) => {
     if (!rows[0]) throw new Error('Movie not found');
     return rows[0];
   } catch (error) {
+    console.error('Error deleting movie:', error);
     throw new Error('Error deleting movie: ' + error.message);
   }
 };

@@ -9,7 +9,7 @@ const {
 } = require('./db/users');
 
 const {
-  createMovie, getAllMovies, getMovieById, deleteMovie,
+  createMovie, getAllMovies, getMovieById, updateMovie, deleteMovie,
 } = require('./db/movies');
 
 const {
@@ -17,11 +17,12 @@ const {
 } = require('./db/reviews');
 
 const app = express();
+
 app.use(cors());
 app.use(express.json());
 app.use(express.static('dist'));
 
-// Connect to DB and start server
+// Connect to database and start server
 client.connect()
   .then(() => {
     console.log('✅ Connected to DB');
@@ -33,7 +34,7 @@ client.connect()
     console.error('❌ Error connecting to DB:', err);
   });
 
-/* AUTH ROUTES */
+/* ===== AUTH ROUTES ===== */
 app.post('/api/auth/login', async (req, res) => {
   try {
     const { identifier, password } = req.body;
@@ -68,7 +69,7 @@ app.post('/api/auth/register', async (req, res) => {
   }
 });
 
-/* USER ROUTES */
+/* ===== USER ROUTES ===== */
 app.get('/api/users', async (req, res) => {
   try {
     const users = await fetchUsers();
@@ -106,21 +107,22 @@ app.delete('/api/users/:id', async (req, res) => {
   }
 });
 
-/* MOVIE ROUTES */
+/* ===== MOVIE ROUTES ===== */
 app.post('/api/movies', async (req, res) => {
-  const { title, director, releaseYear } = req.body;
+  const { title, director, year } = req.body;
+
   if (!title || typeof title !== 'string') {
     return res.status(400).json({ error: 'Title is required and must be a string' });
   }
   if (director !== undefined && typeof director !== 'string') {
     return res.status(400).json({ error: 'Director must be a string' });
   }
-  if (releaseYear !== undefined && (typeof releaseYear !== 'number' || releaseYear < 1800 || releaseYear > 2100)) {
-    return res.status(400).json({ error: 'Release year must be a valid number between 1800 and 2100' });
+  if (year !== undefined && (typeof year !== 'number' || year < 1800 || year > 2100)) {
+    return res.status(400).json({ error: 'Year must be a valid number between 1800 and 2100' });
   }
 
   try {
-    const movie = await createMovie({ title, director, releaseYear });
+    const movie = await createMovie({ title, director, year });
     res.status(201).json(movie);
   } catch (err) {
     console.error('Create movie error:', err);
@@ -152,6 +154,31 @@ app.get('/api/movies/:id', async (req, res) => {
   }
 });
 
+app.put('/api/movies/:id', async (req, res) => {
+  const id = Number(req.params.id);
+  if (isNaN(id)) return res.status(400).json({ error: 'Invalid movie ID' });
+
+  const { title, director, year } = req.body;
+
+  if (title !== undefined && typeof title !== 'string') {
+    return res.status(400).json({ error: 'Title must be a string' });
+  }
+  if (director !== undefined && typeof director !== 'string') {
+    return res.status(400).json({ error: 'Director must be a string' });
+  }
+  if (year !== undefined && (typeof year !== 'number' || year < 1800 || year > 2100)) {
+    return res.status(400).json({ error: 'Year must be a valid number between 1800 and 2100' });
+  }
+
+  try {
+    const updatedMovie = await updateMovie({ id, title, director, year });
+    res.json(updatedMovie);
+  } catch (err) {
+    console.error(`Update movie ${id} error:`, err);
+    res.status(400).json({ error: err.message });
+  }
+});
+
 app.delete('/api/movies/:id', async (req, res) => {
   const id = Number(req.params.id);
   if (isNaN(id)) return res.status(400).json({ error: 'Invalid movie ID' });
@@ -165,7 +192,7 @@ app.delete('/api/movies/:id', async (req, res) => {
   }
 });
 
-/* REVIEW ROUTES */
+/* ===== REVIEW ROUTES ===== */
 app.post('/api/reviews', async (req, res) => {
   const { userId, movieId, rating, comment } = req.body;
 
@@ -217,6 +244,7 @@ app.put('/api/reviews/:id', async (req, res) => {
   if (isNaN(id)) return res.status(400).json({ error: 'Invalid review ID' });
 
   const { rating, comment } = req.body;
+
   if (rating !== undefined && (typeof rating !== 'number' || rating < 1 || rating > 5)) {
     return res.status(400).json({ error: 'Rating must be a number between 1 and 5' });
   }
@@ -225,8 +253,8 @@ app.put('/api/reviews/:id', async (req, res) => {
   }
 
   try {
-    const updated = await updateReview({ id, rating, comment });
-    res.json(updated);
+    const updatedReview = await updateReview({ id, rating, comment });
+    res.json(updatedReview);
   } catch (err) {
     console.error(`Update review ${id} error:`, err);
     res.status(400).json({ error: err.message });

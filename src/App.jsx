@@ -39,7 +39,7 @@ function AppWrapper() {
       <Route path="/register" element={<Registration onRegister={handleLogin} />} />
       <Route path="/reviews" element={<Reviews user={user} />} />
       <Route path="/reviews/:id" element={<Reviews user={user} />} />
-      <Route path="/movies" element={<MoviesList />} />
+      
     </Routes>
   );
 }
