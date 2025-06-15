@@ -81,7 +81,7 @@ export default function Reviews({ user }) {
           body: JSON.stringify({
             title: newMovieTitle.trim(),
             director: newMovieDirector.trim() || null,
-            releaseYear: newMovieYear ? Number(newMovieYear) : null,
+            year: newMovieYear ? Number(newMovieYear) : null,
           }),
         });
         if (!resMovie.ok) {
@@ -187,8 +187,7 @@ export default function Reviews({ user }) {
                   <option value="">--Choose a movie--</option>
                   {movies.map((movie) => (
                     <option key={movie.id} value={movie.id}>
-                      {movie.title}{" "}
-                      {movie.releaseYear ? `(${movie.releaseYear})` : ""}
+                      {movie.title} {movie.year ? `(${movie.year})` : ""}
                     </option>
                   ))}
                 </select>
@@ -219,7 +218,7 @@ export default function Reviews({ user }) {
                 </label>
                 <br />
                 <label htmlFor="new-movie-year">
-                  Release Year:
+                  Year:
                   <input
                     id="new-movie-year"
                     type="number"

@@ -54,6 +54,7 @@ const createTables = async () => {
         title VARCHAR(255) NOT NULL,
         genre VARCHAR(100),
         year INT,
+        director VARCHAR(255),
         poster_url TEXT,
         summary TEXT
       );
@@ -125,6 +126,7 @@ const syncAndSeed = async () => {
       title: 'Inception',
       genre: 'Sci-Fi',
       year: 2010,
+      director: 'Christopher Nolan',
       poster_url: 'http://example.com/inception.jpg',
       summary: 'A mind-bending thriller...',
     });
@@ -133,6 +135,7 @@ const syncAndSeed = async () => {
       title: 'The Godfather',
       genre: 'Crime',
       year: 1972,
+      director: 'Francis Ford Coppola',
       poster_url: 'http://example.com/godfather.jpg',
       summary: 'Classic mafia drama.',
     });
@@ -141,6 +144,7 @@ const syncAndSeed = async () => {
       title: 'The Matrix',
       genre: 'Action',
       year: 1999,
+      director: 'The Wachowskis',
       poster_url: 'http://example.com/matrix.jpg',
       summary: 'Reality is not what it seems.'
     });
