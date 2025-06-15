@@ -8,7 +8,7 @@ export default function Login({ onLogin }) {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Where to redirect after login (default to homepage or use from state)
+ 
   const from = location.state?.from || '/';
 
   const handleSubmit = async e => {
@@ -34,7 +34,6 @@ export default function Login({ onLogin }) {
       setIdentifier('');
       setPassword('');
 
-      // Redirect back to the page user came from
       navigate(from, { replace: true });
     } catch (err) {
       setError('Network error');
