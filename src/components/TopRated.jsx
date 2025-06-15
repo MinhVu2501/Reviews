@@ -23,11 +23,7 @@ export default function TopRated() {
         const moviesRes = await fetch(`${API_BASE}/movies`);
         if (!moviesRes.ok) throw new Error('Failed to fetch movies');
         const movies = await moviesRes.json();
-        
-         // DEBUG: Log the poster_url for Inception
-      const inceptionMovie = movies.find(movie => movie.title === "Inception");
-      console.log("Inception movie data:", inceptionMovie);
-
+      
         const reviewsRes = await fetch(`${API_BASE}/reviews`);
         if (!reviewsRes.ok) throw new Error('Failed to fetch reviews');
         const reviews = await reviewsRes.json();

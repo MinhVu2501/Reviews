@@ -19,8 +19,7 @@ export default function Contact() {
       return;
     }
 
-    // Here, you could send data to backend or email service.
-    // For now, just show success message and reset form:
+
     setStatus("Thanks for reaching out! We'll get back to you soon.");
     setFormData({ name: "", email: "", message: "" });
   };
