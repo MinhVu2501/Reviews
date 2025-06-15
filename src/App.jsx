@@ -5,6 +5,8 @@ import Login from "./components/Login";
 import Registration from "./components/Registration";
 import Reviews from "./components/Reviews";
 import TopRated from "./components/TopRated";
+import SearchResults from "./components/SearchResults";
+import MovieDetail from "./components/MoviesDetail";
 
 function AppWrapper() {
   const navigate = useNavigate();
@@ -40,6 +42,8 @@ function AppWrapper() {
       <Route path="/reviews" element={<Reviews user={user} />} />
       <Route path="/reviews/:id" element={<Reviews user={user} />} />
       <Route path="/top-rated" element={<TopRated />} />
+      <Route path="/search" element={<SearchResults />} />
+      <Route path="/movies/:id" element={<MovieDetail />} />
     </Routes>
   );
 }

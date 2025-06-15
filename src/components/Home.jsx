@@ -2,13 +2,37 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../css/Home.css";
 
+const API_BASE = "https://movies-reviews-ly21.onrender.com/api";
+
 const Home = ({ user, onLogout }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
-  const handleSearch = () => {
-    if (searchTerm.trim()) {
-      navigate(`/search?query=${encodeURIComponent(searchTerm.trim())}`);
+  const handleSearch = async () => {
+    const trimmedTerm = searchTerm.trim();
+    if (!trimmedTerm) return;
+
+    try {
+      const res = await fetch(`${API_BASE}/movies`);
+      if (!res.ok) throw new Error("Failed to fetch movies");
+      const movies = await res.json();
+
+      const matchedMovies = movies.filter((movie) =>
+        movie.title.toLowerCase().includes(trimmedTerm.toLowerCase())
+      );
+
+      if (matchedMovies.length === 1) {
+        // Navigate to movie details page
+        navigate(`/movies/${matchedMovies[0].id}`);
+      } else if (matchedMovies.length > 1) {
+        // Multiple matches: go to search results page with query param
+        navigate(`/search?query=${encodeURIComponent(trimmedTerm)}`);
+      } else {
+        // No matches: alert user
+        alert(`No movies found matching "${trimmedTerm}"`);
+      }
+    } catch (error) {
+      alert("Error searching movies: " + error.message);
     }
   };
 
@@ -111,6 +135,9 @@ const Home = ({ user, onLogout }) => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             aria-label="Search movies"
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleSearch();
+            }}
           />
           <button onClick={handleSearch} aria-label="Search">
             Search
@@ -141,7 +168,9 @@ const Home = ({ user, onLogout }) => {
               loading="lazy"
             />
             <h3>The Matrix</h3>
-            <p>A brilliant social commentary wrapped in an unpredictable thriller.</p>
+            <p>
+              A brilliant social commentary wrapped in an unpredictable thriller.
+            </p>
           </article>
 
           <article className="card">
