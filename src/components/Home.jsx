@@ -22,13 +22,10 @@ const Home = ({ user, onLogout }) => {
       );
 
       if (matchedMovies.length === 1) {
-        // Navigate to movie details page
         navigate(`/movies/${matchedMovies[0].id}`);
       } else if (matchedMovies.length > 1) {
-        // Multiple matches: go to search results page with query param
         navigate(`/search?query=${encodeURIComponent(trimmedTerm)}`);
       } else {
-        // No matches: alert user
         alert(`No movies found matching "${trimmedTerm}"`);
       }
     } catch (error) {
@@ -150,7 +147,7 @@ const Home = ({ user, onLogout }) => {
         <div className="review-cards">
           <article className="card">
             <img
-              //src="/images/inception.jpg"
+              src="/img/Inception.jpg"
               alt="Poster of the movie Inception"
               loading="lazy"
             />
@@ -163,7 +160,7 @@ const Home = ({ user, onLogout }) => {
 
           <article className="card">
             <img
-              //src="/images/matrix.jpg"
+              src="/img/Matrix.jpg"
               alt="Poster of the movie The Matrix"
               loading="lazy"
             />
@@ -175,7 +172,7 @@ const Home = ({ user, onLogout }) => {
 
           <article className="card">
             <img
-              //src="/images/godfather.jpg"
+              src="/img/Godfather.jpg"
               alt="Poster of the movie The Godfather"
               loading="lazy"
             />
