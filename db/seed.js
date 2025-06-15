@@ -126,7 +126,7 @@ const syncAndSeed = async () => {
       genre: 'Sci-Fi',
       year: 2010,
       director: 'Christopher Nolan',
-      poster_url: 'http://example.com/inception.jpg',
+      poster_url: '/img/Inception.jpg',
       summary: 'A mind-bending thriller...',
     });
 
@@ -135,7 +135,7 @@ const syncAndSeed = async () => {
       genre: 'Crime',
       year: 1972,
       director: 'Francis Ford Coppola',
-      poster_url: 'http://example.com/godfather.jpg',
+      poster_url: '/img/Godfather.jpg',
       summary: 'Classic mafia drama.',
     });
 
@@ -144,7 +144,7 @@ const syncAndSeed = async () => {
       genre: 'Action',
       year: 1999,
       director: 'The Wachowskis',
-      poster_url: 'http://example.com/matrix.jpg',
+      poster_url: '/img/Matrix.jpg',
       summary: 'Reality is not what it seems.'
     });
 
