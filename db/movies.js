@@ -35,7 +35,7 @@ const getAllMovies = async () => {
   }
 };
 
-// Get a single movie by ID
+// Get movie by id
 const getMovieById = async (id) => {
   if (!id) throw new Error('Movie ID is required');
 
