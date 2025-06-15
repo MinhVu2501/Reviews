@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import "../css/Reviews.css";
 
 const API_BASE = "https://movies-reviews-ly21.onrender.com";
 
@@ -8,8 +9,7 @@ export default function Reviews({ user }) {
   const [reviews, setReviews] = useState([]);
   const [error, setError] = useState(null);
 
- 
-  const [mode, setMode] = useState("existing"); 
+  const [mode, setMode] = useState("existing");
   const [selectedMovieId, setSelectedMovieId] = useState("");
   const [newMovieTitle, setNewMovieTitle] = useState("");
   const [newMovieDirector, setNewMovieDirector] = useState("");
@@ -46,10 +46,6 @@ export default function Reviews({ user }) {
     } catch (err) {
       setError(err.message);
     }
-  };
-
-  const handleReturnHome = () => {
-    navigate("/");
   };
 
   const handleSubmit = async (e) => {
@@ -93,7 +89,6 @@ export default function Reviews({ user }) {
 
         await fetchMovies();
 
-        // Clear new movie inputs after creation
         setNewMovieTitle("");
         setNewMovieDirector("");
         setNewMovieYear("");
@@ -122,7 +117,6 @@ export default function Reviews({ user }) {
 
       await fetchReviews();
 
-      // Reset form
       setRating(3);
       setComment("");
       setSelectedMovieId("");
@@ -133,19 +127,22 @@ export default function Reviews({ user }) {
   };
 
   return (
-    <div>
+    <div className="reviews-container">
       <h2>Reviews</h2>
 
-      <button onClick={handleReturnHome} style={{ marginBottom: "1rem" }}>
-        Return Home
-      </button>
-
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p className="error-message">{error}</p>}
 
       {!user ? (
         <p>
-          You must <button onClick={() => navigate("/login")}>Login</button> to
-          add a review.
+          You must{" "}
+          <button
+            onClick={() => navigate("/login")}
+            className="return-button"
+            type="button"
+          >
+            Login
+          </button>{" "}
+          to add a review.
         </p>
       ) : (
         <form onSubmit={handleSubmit}>
@@ -275,6 +272,14 @@ export default function Reviews({ user }) {
           ))}
         </ul>
       )}
+
+      <button
+        className="return-button"
+        onClick={() => navigate(-1)}
+        type="button"
+      >
+        Back
+      </button>
     </div>
   );
 }
