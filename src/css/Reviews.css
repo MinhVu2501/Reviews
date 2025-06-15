@@ -1,0 +1,130 @@
+/* Reviews.css */
+
+.reviews-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  font-family: Arial, sans-serif;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fafafa;
+}
+
+.reviews-container h2,
+.reviews-container h3 {
+  text-align: center;
+  color: #333;
+}
+
+.error-message {
+  color: red;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.return-button {
+  display: block;
+  margin: 1rem auto 2rem auto;
+  padding: 0.5rem 1.2rem;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.return-button:hover {
+  background-color: #0056b3;
+}
+
+form fieldset {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 1rem 1.5rem 2rem 1.5rem;
+  background-color: #fff;
+}
+
+form legend {
+  font-weight: 700;
+  padding: 0 10px;
+  color: #555;
+}
+
+form label {
+  display: block;
+  margin-bottom: 0.75rem;
+  color: #444;
+  font-weight: 600;
+}
+
+form input[type="text"],
+form input[type="number"],
+form select,
+form textarea {
+  width: 100%;
+  padding: 0.4rem 0.5rem;
+  margin-top: 0.25rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+form input[type="radio"] {
+  margin-right: 0.3rem;
+}
+
+form textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+form button[type="submit"] {
+  margin-top: 1rem;
+  background-color: #28a745;
+  color: white;
+  font-weight: 700;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: block;
+  width: 100%;
+}
+
+form button[type="submit"]:hover {
+  background-color: #218838;
+}
+
+ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+ul li {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 6px;
+  color: #222;
+}
+
+ul li strong {
+  color: #007bff;
+}
+
+ul li em {
+  color: #555;
+}
+
+ul li span {
+  display: block;
+  margin-top: 0.25rem;
+  color: #333;
+  font-style: normal;
+}
