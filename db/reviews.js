@@ -20,6 +20,7 @@ const createReview = async ({ userId, movieId, rating, comment = '' }) => {
     );
     return rows[0];
   } catch (error) {
+    console.error('Error creating review:', error);
     throw new Error('Error creating review: ' + error.message);
   }
 };
@@ -53,6 +54,7 @@ const getAllReviews = async () => {
       movieTitle: row.movie_title,
     }));
   } catch (error) {
+    console.error('Error fetching reviews:', error);
     throw new Error('Error fetching reviews: ' + error.message);
   }
 };
@@ -93,6 +95,7 @@ const getReviewById = async (id) => {
       movieTitle: row.movie_title,
     };
   } catch (error) {
+    console.error('Error fetching review by ID:', error);
     throw new Error('Error fetching review by ID: ' + error.message);
   }
 };
@@ -137,6 +140,7 @@ const updateReview = async ({ id, rating, comment }) => {
     if (!rows[0]) throw new Error('Review not found');
     return rows[0];
   } catch (error) {
+    console.error('Error updating review:', error);
     throw new Error('Error updating review: ' + error.message);
   }
 };
@@ -156,6 +160,7 @@ const deleteReview = async (id) => {
     if (!rows[0]) throw new Error('Review not found');
     return rows[0];
   } catch (error) {
+    console.error('Error deleting review:', error);
     throw new Error('Error deleting review: ' + error.message);
   }
 };

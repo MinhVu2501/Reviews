@@ -17,12 +17,11 @@ const {
 } = require('./db/reviews');
 
 const app = express();
-
 app.use(cors());
 app.use(express.json());
 app.use(express.static('dist'));
 
-// Connect to database and start server
+// Connect to DB and start server
 client.connect()
   .then(() => {
     console.log('✅ Connected to DB');
@@ -34,7 +33,7 @@ client.connect()
     console.error('❌ Error connecting to DB:', err);
   });
 
-/* ===== AUTH ROUTES ===== */
+/* AUTH ROUTES */
 app.post('/api/auth/login', async (req, res) => {
   try {
     const { identifier, password } = req.body;
@@ -69,7 +68,7 @@ app.post('/api/auth/register', async (req, res) => {
   }
 });
 
-/* ===== USER ROUTES ===== */
+/* USER ROUTES */
 app.get('/api/users', async (req, res) => {
   try {
     const users = await fetchUsers();
@@ -107,10 +106,9 @@ app.delete('/api/users/:id', async (req, res) => {
   }
 });
 
-/* ===== MOVIE ROUTES ===== */
+/* MOVIE ROUTES */
 app.post('/api/movies', async (req, res) => {
-  const { title, director, year } = req.body;
-
+  const { title, director, year } = req.body; // Use 'year' here
   if (!title || typeof title !== 'string') {
     return res.status(400).json({ error: 'Title is required and must be a string' });
   }
@@ -192,7 +190,7 @@ app.delete('/api/movies/:id', async (req, res) => {
   }
 });
 
-/* ===== REVIEW ROUTES ===== */
+/* REVIEW ROUTES */
 app.post('/api/reviews', async (req, res) => {
   const { userId, movieId, rating, comment } = req.body;
 
@@ -244,7 +242,6 @@ app.put('/api/reviews/:id', async (req, res) => {
   if (isNaN(id)) return res.status(400).json({ error: 'Invalid review ID' });
 
   const { rating, comment } = req.body;
-
   if (rating !== undefined && (typeof rating !== 'number' || rating < 1 || rating > 5)) {
     return res.status(400).json({ error: 'Rating must be a number between 1 and 5' });
   }
@@ -253,8 +250,8 @@ app.put('/api/reviews/:id', async (req, res) => {
   }
 
   try {
-    const updatedReview = await updateReview({ id, rating, comment });
-    res.json(updatedReview);
+    const updated = await updateReview({ id, rating, comment });
+    res.json(updated);
   } catch (err) {
     console.error(`Update review ${id} error:`, err);
     res.status(400).json({ error: err.message });

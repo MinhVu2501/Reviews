@@ -4,7 +4,7 @@ import Home from "./components/Home";
 import Login from "./components/Login";
 import Registration from "./components/Registration";
 import Reviews from "./components/Reviews";
-import MoviesList from "./components/MoviesList";
+import TopRated from "./components/TopRated";
 
 function AppWrapper() {
   const navigate = useNavigate();
@@ -39,13 +39,11 @@ function AppWrapper() {
       <Route path="/register" element={<Registration onRegister={handleLogin} />} />
       <Route path="/reviews" element={<Reviews user={user} />} />
       <Route path="/reviews/:id" element={<Reviews user={user} />} />
-      
+      <Route path="/top-rated" element={<TopRated />} />
     </Routes>
   );
 }
 
 export default function App() {
-  return (
-      <AppWrapper />
-  );
+  return <AppWrapper />;
 }

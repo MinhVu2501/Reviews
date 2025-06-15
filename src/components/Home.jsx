@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "../css/Home.css";
 
 const Home = ({ user, onLogout }) => {
@@ -20,21 +20,70 @@ const Home = ({ user, onLogout }) => {
   return (
     <div className="home-container">
       <header className="navbar">
-        <div className="logo">MovieVerse</div>
+        <div
+          className="logo"
+          style={{ cursor: "pointer" }}
+          onClick={() => navigate("/")}
+          aria-label="Go to home page"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") navigate("/");
+          }}
+        >
+          MovieVerse
+        </div>
         <nav className="nav-links" aria-label="Primary navigation">
-          <Link to="/">Home</Link>
-          <Link to="/reviews">Reviews</Link>
-          <Link to="/top-rated">Top Rated</Link>
-          <Link to="/about">About</Link>
-          <Link to="/contact">Contact</Link>
+          <button
+            onClick={() => navigate("/")}
+            className="nav-button"
+            aria-label="Home"
+          >
+            Home
+          </button>
+          <button
+            onClick={() => navigate("/reviews")}
+            className="nav-button"
+            aria-label="Reviews"
+          >
+            Reviews
+          </button>
+          <button
+            onClick={() => navigate("/top-rated")}
+            className="nav-button"
+            aria-label="Top Rated"
+          >
+            Top Rated
+          </button>
+          <button
+            onClick={() => navigate("/about")}
+            className="nav-button"
+            aria-label="About"
+          >
+            About
+          </button>
+          <button
+            onClick={() => navigate("/contact")}
+            className="nav-button"
+            aria-label="Contact"
+          >
+            Contact
+          </button>
           {!user ? (
             <>
-              <Link to="/login" className="auth-link">
+              <button
+                onClick={() => navigate("/login")}
+                className="auth-link nav-button"
+                aria-label="Login"
+              >
                 Login
-              </Link>
-              <Link to="/register" className="auth-link">
+              </button>
+              <button
+                onClick={() => navigate("/register")}
+                className="auth-link nav-button"
+                aria-label="Register"
+              >
                 Register
-              </Link>
+              </button>
             </>
           ) : (
             <>
@@ -79,7 +128,10 @@ const Home = ({ user, onLogout }) => {
               loading="lazy"
             />
             <h3>Inception</h3>
-            <p>A mind-bending thriller from Christopher Nolan that keeps you on edge.</p>
+            <p>
+              A mind-bending thriller from Christopher Nolan that keeps you on
+              edge.
+            </p>
           </article>
 
           <article className="card">
