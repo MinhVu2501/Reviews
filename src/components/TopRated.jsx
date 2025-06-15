@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 
 const API_BASE = "https://movies-reviews-ly21.onrender.com/api";
 
-
 export default function TopRated() {
   const [topMovies, setTopMovies] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -24,7 +23,6 @@ export default function TopRated() {
 
         const ratingsMap = {};
         reviews.forEach(({ movieId, rating }) => {
-          if (typeof movieId !== 'number' || typeof rating !== 'number') return;
           if (!ratingsMap[movieId]) ratingsMap[movieId] = { total: 0, count: 0 };
           ratingsMap[movieId].total += rating;
           ratingsMap[movieId].count++;
@@ -40,7 +38,6 @@ export default function TopRated() {
         });
 
         moviesWithAvg.sort((a, b) => b.avgRating - a.avgRating || b.ratingCount - a.ratingCount);
-
         setTopMovies(moviesWithAvg.slice(0, 5));
       } catch (err) {
         setError(err.message);
@@ -52,21 +49,26 @@ export default function TopRated() {
     fetchTopRated();
   }, []);
 
+  function goHome() {
+    window.location.href = '/';
+  }
+
   if (loading) return <p>Loading top rated movies...</p>;
   if (error) return <p>Error: {error}</p>;
 
   return (
     <div>
       <h2>Top Rated Movies</h2>
+      <button onClick={goHome} style={{ marginBottom: '1rem' }}>Home</button>
       {topMovies.length === 0 && <p>No ratings available yet.</p>}
-      <ul style={{ listStyle: 'none', padding: 0 }}>
+      <ul>
         {topMovies.map(movie => (
           <li key={movie.id} style={{ marginBottom: '1rem' }}>
-            <strong>{movie.title || 'Untitled'}</strong> ({movie.year || 'N/A'})<br />
-            Average Rating: {movie.avgRating.toFixed(2)} ({movie.ratingCount} reviews)<br />
+            <strong>{movie.title}</strong> ({movie.year || 'N/A'}) <br />
+            Average Rating: {movie.avgRating.toFixed(2)} ({movie.ratingCount} reviews) <br />
             <img
               src={movie.poster_url || 'https://via.placeholder.com/100x150?text=No+Image'}
-              alt={movie.title || 'No title'}
+              alt={movie.title}
               style={{ width: 100, height: 150, objectFit: 'cover', marginTop: '0.5rem' }}
             />
           </li>

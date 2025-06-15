@@ -8,8 +8,8 @@ export default function Reviews({ user }) {
   const [reviews, setReviews] = useState([]);
   const [error, setError] = useState(null);
 
-  // Form state
-  const [mode, setMode] = useState("existing"); // "existing" or "new"
+ 
+  const [mode, setMode] = useState("existing"); 
   const [selectedMovieId, setSelectedMovieId] = useState("");
   const [newMovieTitle, setNewMovieTitle] = useState("");
   const [newMovieDirector, setNewMovieDirector] = useState("");
