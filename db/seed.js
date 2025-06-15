@@ -25,7 +25,6 @@ const {
 const dropTables = async () => {
   try {
     console.log("Dropping tables...");
-    // Drop in reverse dependency order
     await client.query(`DROP TABLE IF EXISTS reviews;`);
     await client.query(`DROP TABLE IF EXISTS movies;`);
     await client.query(`DROP TABLE IF EXISTS users;`);
