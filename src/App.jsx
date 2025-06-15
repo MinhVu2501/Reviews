@@ -8,7 +8,7 @@ import TopRated from "./components/TopRated";
 import SearchResults from "./components/SearchResults";
 import MovieDetail from "./components/MoviesDetail";
 import About from "./components/About";
-
+import Contact from "./components/Contact";
 
 function AppWrapper() {
   const navigate = useNavigate();
@@ -47,6 +47,7 @@ function AppWrapper() {
       <Route path="/search" element={<SearchResults />} />
       <Route path="/movies/:id" element={<MovieDetail />} />
       <Route path="/about" element={<About />} /> 
+      <Route path="/contact" element={<Contact />} />
     </Routes>
   );
 }
